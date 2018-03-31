@@ -1,16 +1,17 @@
-const incrementAndReturnCharacter = stringcode => {
-  // const keycode = stringcode.trim();
-  // const code = parseInt(keycode, 10);
-  // const incrementedCode = code + 1;
+const box = x => {
+  return {
+    map: f => box(f(x)),
+    unbox: f => f(x)
+  };
+};
 
-  // return String.fromCharCode(incrementedCode);
-  const result = [stringcode]
+const incrementAndReturnCharacter = stringcode => {
+  return box(stringcode)
     .map(s => s.trim())
     .map(s => parseInt(s, 10))
     .map(i => i + 1)
-    .map(k => String.fromCharCode(k));
-
-  return result[0];
+    .map(k => String.fromCharCode(k))
+    .unbox(x => x);
 };
 
 export default incrementAndReturnCharacter;
