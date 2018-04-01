@@ -5,7 +5,7 @@ const right = x => ({
 
 const left = x => ({
   map: () => left(x),
-  fold: (f, g) => f(x)
+  fold: (f) => f(x)
 });
 
 const colours = {
@@ -22,7 +22,10 @@ const findColour = name => {
 const getColourFromName = name => {
   return findColour(name)
     .map(c => c.slice(1))
-    .fold(() => 'NOT FOUND', x => x.toUpperCase());
+    .fold(
+      () => 'NOT FOUND',
+      x => x.toUpperCase()
+    );
 };
 
 export default getColourFromName;
