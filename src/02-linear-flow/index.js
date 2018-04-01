@@ -2,7 +2,7 @@ const box = x => {
   return {
     map: f => box(f(x)),
     inspect: () => `Box(${x})`,
-    unbox: f => f(x)
+    fold: f => f(x)
   };
 };
 
@@ -21,9 +21,9 @@ const discountToFloat = d => {
 
 const applyDiscount = (amount, discount) => (
   moneyToFloat(amount)
-    .unbox(total => (
+    .fold(total => (
       discountToFloat(discount)
-        .unbox(d => total - (total * d))
+        .fold(d => total - (total * d))
     ))
 );
 
