@@ -16,14 +16,17 @@ const discountToFloat = d => {
   return box(d)
     .map(s => s.replace(/\%/g, ''))
     .map(s => parseFloat(s))
-    .unbox(f => f * 0.01);
+    .map(f => f * 0.01);
 };
 
-const applyDiscount = (amount, discount) => {
-  return moneyToFloat(amount)
-    .map(a => a - (a * discountToFloat(discount)))
-    .unbox(x => x);
-};
+const applyDiscount = (amount, discount) => (
+  moneyToFloat(amount)
+    .unbox(total => (
+      discountToFloat(discount)
+        .unbox(d => total - (total * d))
+    ))
+);
+
 
 export default applyDiscount;
 
