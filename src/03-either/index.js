@@ -14,9 +14,12 @@ const colours = {
   'blue': '#0000ff'
 };
 
+const fromNullable = x => (
+  x ? right(x) : left(null)
+);
+
 const findColour = name => {
-  const code = colours[name];
-  return code ? right(code) : left(null);
+  return fromNullable(colours[name]);
 };
 
 const getColourFromName = name => {
