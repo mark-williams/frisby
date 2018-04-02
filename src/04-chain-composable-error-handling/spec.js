@@ -8,11 +8,11 @@ describe('04-chain with nested eithers', () => {
 
   it('returns "ERROR" if file does not exist', () => {
     const version = getVersion('____package.json');
-    expect(version).toEqual('ERROR');
+    expect(version).toContain('no such file');
   });
 
-  it('returns \'BAD ITEM\' if file doesn\'t contain \'version\'', () => {
+  it('returns \'BAD ITEM\' if file isn\'t in JSON format', () => {
     const version = getVersion('.gitignore');
-    expect(version).toEqual('CANNOT PARSE');
+    expect(version).toContain('SyntaxError');
   });
 });
