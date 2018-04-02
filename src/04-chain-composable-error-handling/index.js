@@ -20,11 +20,10 @@ const tryCatch = f => {
 
 const getVersion = fileName => {
   return tryCatch(() => fs.readFileSync(fileName))
-    .map(c => JSON.parse(c))
-    .fold(
-      () => 'ERROR',
-      p => p.version
-    );
+    .map(
+      c => tryCatch(() => JSON.parse(c))
+        .fold(() => 'CANNOT PARSE', j => j.version))
+    .fold(() => 'ERROR', x => x);
 };
 
 export default getVersion;

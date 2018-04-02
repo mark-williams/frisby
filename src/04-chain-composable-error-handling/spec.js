@@ -10,4 +10,9 @@ describe('04-chain with nested eithers', () => {
     const version = getVersion('____package.json');
     expect(version).toEqual('ERROR');
   });
+
+  it('returns \'BAD ITEM\' if file doesn\'t contain \'version\'', () => {
+    const version = getVersion('.gitignore');
+    expect(version).toEqual('CANNOT PARSE');
+  });
 });
