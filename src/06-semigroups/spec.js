@@ -9,7 +9,7 @@ describe('06 - semigroups', () => {
   it('should implement concat', () => {
     const x = 10;
     const y = 11;
-    const result = sum(x).concat(y);
-    expect(result).toEqual(x + y);
+    const result = sum(x).concat(sum(y));
+    expect(result.val).toEqual(x + y);
   });
 });
