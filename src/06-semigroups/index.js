@@ -1,6 +1,6 @@
 const sum = x => ({
   val: x,
-  concat: y => sum(x + y.val)
+  concat: ({ val: y }) => sum(x + y)
 });
 
 export default sum;
