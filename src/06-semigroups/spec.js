@@ -23,6 +23,15 @@ describe('06 - semigroups', () => {
 
       expect(result.val).toBe(true);
     });
+
+    it('\'all\' should support concat of booleans - result is fasle if not all values all are true', () => {
+      const testValues = [true, false, false, true];
+      const result = testValues.reduce((r, c) => {
+        return r.concat(all(c));
+      }, all(true));
+
+      expect(result.val).toBe(false);
+    });
   });
 });
 
