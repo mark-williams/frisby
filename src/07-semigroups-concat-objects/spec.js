@@ -1,6 +1,12 @@
 import { Map } from 'immutable-ext';
 import { All, First } from './';
 
+// NB immutable-ext redefines Map.conact as follows:
+// Map.prototype.concat = function(other) {
+//   return this.mergeWith((prev, next) => prev.concat(next), other)
+// }
+
+
 describe.only('07 - semigroups', () => {
   describe('combine objects', () => {
     it('should combine objects using the approp concat for each type', () => {
