@@ -1,22 +1,22 @@
 import fs from 'fs';
 
-const right = x => ({
+const Right = x => ({
   chain: f => f(x),
-  map: f => right(f(x)),
+  map: f => Right(f(x)),
   fold: (f, g) => g(x)
 });
 
-const left = x => ({
-  chain: () => left(x),
-  map: () => left(x),
+const Left = x => ({
+  chain: () => Left(x),
+  map: () => Left(x),
   fold: (f) => f(x)
 });
 
 const tryCatch = f => {
   try {
-    return right(f());
+    return Right(f());
   } catch (e) {
-    return left(e);
+    return Left(e);
   }
 };
 

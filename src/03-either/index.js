@@ -1,10 +1,10 @@
-const right = x => ({
-  map: f => right(f(x)),
+const Right = x => ({
+  map: f => Right(f(x)),
   fold: (f, g) => g(x)
 });
 
-const left = x => ({
-  map: () => left(x),
+const Left = x => ({
+  map: () => Left(x),
   fold: (f) => f(x)
 });
 
@@ -15,7 +15,7 @@ const colours = {
 };
 
 const fromNullable = x => (
-  x ? right(x) : left(null)
+  x ? Right(x) : Left(null)
 );
 
 const findColour = name => {

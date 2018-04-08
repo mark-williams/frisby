@@ -13,7 +13,7 @@ const All = x => ({
 const First = x => ({
   val: x,
   concat: () => First(x),
-  inspect: () => `First(${x})`
+  inspect: () => `Sum(${x})`
 });
 
 export { Sum, All, First };

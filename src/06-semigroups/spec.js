@@ -1,44 +1,44 @@
-import { all, sum, first } from './';
+import { All, Sum, First } from './';
 
 describe('06 - semigroups', () => {
   describe('semigroups | integers', () => {
-    it('\'sum\' should implement \'val\' prop', () => {
-      const result = sum(100);
+    it('\'Sum\' should implement \'val\' prop', () => {
+      const result = Sum(100);
       expect(result.val).toEqual(100);
     });
 
     it('should implement concat', () => {
       const x = 10;
       const y = 11;
-      const result = sum(x).concat(sum(y));
+      const result = Sum(x).concat(Sum(y));
       expect(result.val).toEqual(x + y);
     });
   });
 
   describe('semigroups - booleans (all)', () => {
-    it('\'all\' should support concat of booleans - result is true if values all are true', () => {
+    it('\'All\' should support concat of booleans - result is true if values all are true', () => {
       const a = true;
       const b = true;
-      const result = all(a).concat(all(b));
+      const result = All(a).concat(All(b));
 
       expect(result.val).toBe(true);
     });
 
-    it('\'all\' should support concat of booleans - result is fasle if not all values all are true', () => {
+    it('\'All\' should support concat of booleans - result is fasle if not all values all are true', () => {
       const testValues = [true, false, false, true];
       const result = testValues.reduce((r, c) => {
-        return r.concat(all(c));
-      }, all(true));
+        return r.concat(All(c));
+      }, All(true));
 
       expect(result.val).toBe(false);
     });
   });
 
-  describe('semigroups - first', () => {
+  describe('semigroups - First', () => {
     it('should take first term when combining', () => {
       const a = 'One';
       const b = 'Two';
-      const result = first(a).concat(first(b));
+      const result = First(a).concat(First(b));
 
       expect(result.val).toBe(a);
     });
