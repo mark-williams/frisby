@@ -8,4 +8,9 @@ const all = x => ({
   concat: ({ val: y }) => all(x && y)
 });
 
-export { sum, all };
+const first = x => ({
+  val: x,
+  concat: () => first(x)
+});
+
+export { sum, all, first };

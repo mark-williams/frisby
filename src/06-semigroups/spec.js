@@ -1,4 +1,4 @@
-import { all, sum } from './';
+import { all, sum, first } from './';
 
 describe('06 - semigroups', () => {
   describe('semigroups | integers', () => {
@@ -31,6 +31,16 @@ describe('06 - semigroups', () => {
       }, all(true));
 
       expect(result.val).toBe(false);
+    });
+  });
+
+  describe('semigroups - first', () => {
+    it('should take first term when combining', () => {
+      const a = 'One';
+      const b = 'Two';
+      const result = first(a).concat(first(b));
+
+      expect(result.val).toBe(a);
     });
   });
 });
