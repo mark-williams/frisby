@@ -25,4 +25,12 @@ describe('folktale | maybe', () => {
       expect(result.getOrElse('Not found')).toBe('Not found');
     });
   });
+
+  describe('extracting values', () => {
+    it('extract value from Maybe.Just', () => {
+      const result = maybeFindInArray([1, 2, 3, 4], isEqualTo(2));
+      const extractedValue = result.getOrElse('Not found');
+      expect(extractedValue).toBe(2);
+    });
+  });
 });
