@@ -12,7 +12,6 @@ const findInArray = (arr, predicate) => {
 const maybeFindInArray = (arr, predicate) => {
   for (let i = 0; i < arr.length; i++) {
     if (predicate(arr[i])) {
-      //return new Date();
       return Maybe.Just(arr[i]);
     }
   }
