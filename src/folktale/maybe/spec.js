@@ -60,11 +60,29 @@ describe('folktale | maybe', () => {
         expect(transformed.getOrElse('')).toEqual({ value: 4 });
       });
 
-      it('will only apply transforms to Maybe.Just', () => {
+      it('will only apply transforms Maybe.Just', () => {
         const result = maybeFindInArray([], isEqualTo(2));
         const transformed = result.chain(increment).chain(transform);
 
         expect(transformed.getOrElse('Not found')).toEqual('Not found');
+      });
+    });
+
+    describe('error handling', () => {
+      it("handles errors using 'orElse'", () => {
+        const result = maybeFindInArray([], isEqualTo(2)).orElse(() =>
+          Maybe.Just('Element not in array')
+        );
+
+        expect(result.getOrElse('')).toEqual('Element not in array');
+      });
+
+      it("'orElse' will ignore non-errors (ie Just values)", () => {
+        const result = maybeFindInArray([11, 9, 3, 4, 2, 8], isEqualTo(2))
+          .orElse(() => Maybe.Just('Element not in array'))
+          .chain(increment);
+
+        expect(result.getOrElse('')).toEqual(3);
       });
     });
   });
