@@ -12,7 +12,7 @@ describe('folktale | maybe', () => {
 
     it('maybeFindInArray returns Maybe', () => {
       const result = maybeFindInArray([1, 2, 3, 4], isEqualTo(13));
-      expect(Maybe.hasInstance(result));
+      expect(Maybe.hasInstance(result)).toBe(true);
     });
 
     it('maybeFindInArray returns Maybe.Just', () => {
@@ -31,6 +31,15 @@ describe('folktale | maybe', () => {
       const result = maybeFindInArray([1, 2, 3, 4], isEqualTo(2));
       const extractedValue = result.getOrElse('Not found');
       expect(extractedValue).toBe(2);
+    });
+  });
+
+  describe('transforming values', () => {
+    it('increment found item', () => {
+      const result = maybeFindInArray([7, 3, 5, 2], isEqualTo(5));
+      const incremented = result.map(x => x + 1);
+      expect(Maybe.hasInstance(incremented)).toBe(true);
+      expect(incremented.getOrElse('')).toEqual(6);
     });
   });
 });
