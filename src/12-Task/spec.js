@@ -3,16 +3,33 @@ import { task } from 'folktale/concurrency/task';
 const TOPCORNER = 'topcorner';
 const MISSING = 'missing';
 const PENALTY_SCORED = 'Scores!!!';
-// const PENALTY_SAVED = 'Saved!!!';
+const PENALTY_MISSED = 'Saved!!!';
+const RETAKE = 'Retake';
 
 /* eslint no-console: off */
+
 const penalty = (rej, res) => attempt => {
-  if (attempt.shot === MISSING) {
-    rej('Missed');
-  } else {
-    res(PENALTY_SCORED);
+  switch (attempt.shot) {
+    case MISSING:
+      res(PENALTY_MISSED);
+      break;
+    case TOPCORNER:
+      res(PENALTY_SCORED);
+      break;
+
+    default:
+      rej(RETAKE);
   }
 };
+
+const penaltyTask = attempt =>
+  task(resolver => {
+    if (attempt.shot === MISSING) {
+      resolver.reject(PENALTY_MISSED);
+    } else {
+      resolver.resolve(PENALTY_SCORED);
+    }
+  });
 
 describe('Task (from folktale', () => {
   let success;
@@ -34,10 +51,34 @@ describe('Task (from folktale', () => {
     it("take 'poor' penalty", () => {
       const takePen = penalty(reject, success);
       takePen({ shot: MISSING });
+      expect(reject).toHaveBeenCalledTimes(0);
+      expect(success).toHaveBeenCalledTimes(1);
+    });
+
+    it('cause infringement while taking penalty', () => {
+      const takePen = penalty(reject, success);
+      takePen({ shot: 'double kick' });
       expect(reject).toHaveBeenCalledTimes(1);
       expect(success).toHaveBeenCalledTimes(0);
     });
   });
 
-  describe('task implementation', () => {});
+  describe('task implementation', () => {
+    it("task | take 'good' penalty", () => {
+      return penaltyTask({ shot: TOPCORNER })
+        .run()
+        .promise()
+        .then(r => {
+          expect(r).toEqual(PENALTY_SCORED);
+        });
+    });
+
+    it("task | take 'good' penalty", () => {
+      return penaltyTask({ shot: MISSING })
+        .run()
+        .promise()
+        .then(success)
+        .catch(e => expect(e).toEqual(PENALTY_MISSED));
+    });
+  });
 });
