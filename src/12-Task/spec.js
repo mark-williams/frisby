@@ -24,10 +24,16 @@ const penalty = (rej, res) => attempt => {
 
 const penaltyTask = attempt =>
   task(resolver => {
-    if (attempt.shot === MISSING) {
-      resolver.reject(PENALTY_MISSED);
-    } else {
-      resolver.resolve(PENALTY_SCORED);
+    switch (attempt.shot) {
+      case MISSING:
+        resolver.resolve(PENALTY_MISSED);
+        break;
+      case TOPCORNER:
+        resolver.resolve(PENALTY_SCORED);
+        break;
+
+      default:
+        resolver.reject(RETAKE);
     }
   });
 
@@ -73,12 +79,12 @@ describe('Task (from folktale', () => {
         });
     });
 
-    it("task | take 'good' penalty", () => {
-      return penaltyTask({ shot: MISSING })
+    it('task | take penalty with unsupported shot type', () => {
+      return penaltyTask({ shot: 'backward_pass' })
         .run()
         .promise()
         .then(success)
-        .catch(e => expect(e).toEqual(PENALTY_MISSED));
+        .catch(e => expect(e).toEqual(RETAKE));
     });
   });
 });
