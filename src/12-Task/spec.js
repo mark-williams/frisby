@@ -1,41 +1,6 @@
-import { task } from 'folktale/concurrency/task';
-
-const TOPCORNER = 'topcorner';
-const MISSING = 'missing';
-const PENALTY_SCORED = 'Scores!!!';
-const PENALTY_MISSED = 'Saved!!!';
-const RETAKE = 'Retake';
-
+const { of, rejected } = require('folktale/concurrency/task');
+import { penalty, penaltyTask, constants } from './';
 /* eslint no-console: off */
-
-const penalty = (rej, res) => attempt => {
-  switch (attempt.shot) {
-    case MISSING:
-      res(PENALTY_MISSED);
-      break;
-    case TOPCORNER:
-      res(PENALTY_SCORED);
-      break;
-
-    default:
-      rej(RETAKE);
-  }
-};
-
-const penaltyTask = attempt =>
-  task(resolver => {
-    switch (attempt.shot) {
-      case MISSING:
-        resolver.resolve(PENALTY_MISSED);
-        break;
-      case TOPCORNER:
-        resolver.resolve(PENALTY_SCORED);
-        break;
-
-      default:
-        resolver.reject(RETAKE);
-    }
-  });
 
 describe('Task (from folktale', () => {
   let success;
@@ -49,14 +14,14 @@ describe('Task (from folktale', () => {
   describe('non-task implementation', () => {
     it("take 'good' penalty", () => {
       const takePen = penalty(reject, success);
-      takePen({ shot: TOPCORNER });
+      takePen({ shot: constants.topcorner });
       expect(reject).toHaveBeenCalledTimes(0);
       expect(success).toHaveBeenCalledTimes(1);
     });
 
     it("take 'poor' penalty", () => {
       const takePen = penalty(reject, success);
-      takePen({ shot: MISSING });
+      takePen({ shot: constants.missing });
       expect(reject).toHaveBeenCalledTimes(0);
       expect(success).toHaveBeenCalledTimes(1);
     });
@@ -71,11 +36,11 @@ describe('Task (from folktale', () => {
 
   describe('task implementation', () => {
     it("task | take 'good' penalty", () => {
-      return penaltyTask({ shot: TOPCORNER })
+      return penaltyTask({ shot: constants.topcorner })
         .run()
         .promise()
         .then(r => {
-          expect(r).toEqual(PENALTY_SCORED);
+          expect(r).toEqual(constants.penalty_scored);
         });
     });
 
@@ -84,7 +49,26 @@ describe('Task (from folktale', () => {
         .run()
         .promise()
         .then(success)
-        .catch(e => expect(e).toEqual(RETAKE));
+        .catch(e => expect(e).toEqual(constants.retake));
+    });
+  });
+
+  describe('task | simple construction: of and rejected', () => {
+    it('of', () => {
+      const task = of(117);
+      return task
+        .run()
+        .promise()
+        .then(x => expect(x).toEqual(117));
+    });
+
+    it('rejected', () => {
+      const task = rejected('error');
+      return task
+        .run()
+        .promise()
+        .then(() => expect(true).toBe(false))
+        .catch(err => expect(err).toEqual('error'));
     });
   });
 });
