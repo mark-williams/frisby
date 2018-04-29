@@ -1,4 +1,4 @@
-//import { task } from 'folktale/concurrency/task';
+import { task } from 'folktale/concurrency/task';
 
 const TOPCORNER = 'topcorner';
 const MISSING = 'missing';
@@ -6,7 +6,7 @@ const PENALTY_SCORED = 'Scores!!!';
 // const PENALTY_SAVED = 'Saved!!!';
 
 /* eslint no-console: off */
-const penalty = attempt => (rej, res) => {
+const penalty = (rej, res) => attempt => {
   if (attempt.shot === MISSING) {
     rej('Missed');
   } else {
@@ -23,17 +23,21 @@ describe('Task (from folktale', () => {
     reject = jest.fn();
   });
 
-  it("take 'good' penalty", () => {
-    const takePen = penalty({ shot: TOPCORNER });
-    takePen(reject, success);
-    expect(reject).toHaveBeenCalledTimes(0);
-    expect(success).toHaveBeenCalledTimes(1);
+  describe('non-task implementation', () => {
+    it("take 'good' penalty", () => {
+      const takePen = penalty(reject, success);
+      takePen({ shot: TOPCORNER });
+      expect(reject).toHaveBeenCalledTimes(0);
+      expect(success).toHaveBeenCalledTimes(1);
+    });
+
+    it("take 'poor' penalty", () => {
+      const takePen = penalty(reject, success);
+      takePen({ shot: MISSING });
+      expect(reject).toHaveBeenCalledTimes(1);
+      expect(success).toHaveBeenCalledTimes(0);
+    });
   });
 
-  it("take 'poor' penalty", () => {
-    const takePen = penalty({ shot: MISSING });
-    takePen(reject, success);
-    expect(reject).toHaveBeenCalledTimes(1);
-    expect(success).toHaveBeenCalledTimes(0);
-  });
+  describe('task implementation', () => {});
 });
