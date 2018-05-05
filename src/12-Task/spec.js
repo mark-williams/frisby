@@ -51,6 +51,15 @@ describe('Task (from folktale', () => {
         .then(success)
         .catch(e => expect(e).toEqual(constants.retake));
     });
+
+    it('task | execute task and get result using future', done => {
+      penaltyTask({ shot: constants.topcorner })
+        .run()
+        .future()
+        .map(r => expect(r).toEqual(constants.penalty_scored));
+
+      done();
+    });
   });
 
   describe('task | simple construction: of and rejected', () => {
