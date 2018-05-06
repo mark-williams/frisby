@@ -1,4 +1,4 @@
-import { getData } from './';
+import { getData, getDataTask } from './';
 
 jest.useFakeTimers();
 
@@ -18,6 +18,16 @@ describe('13 - use Task for asynchronous actions', () => {
       expect(cb.mock.calls[0][0]).toEqual(
         'Where am I meant to get the data from?'
       );
+    });
+  });
+
+  describe("using 'Task'", () => {
+    it('should retrieve data if given a valid path', () => {
+      expect.assertions(1);
+      const task = getDataTask('moon').run();
+      jest.runAllTimers();
+
+      task.promise().then(x => expect(x).toBe('abba'));
     });
   });
 });
