@@ -27,10 +27,20 @@ describe('13 - use Task for asynchronous actions', () => {
       const task = getDataTask('moon').run();
       jest.runAllTimers();
 
-      task
+      return task
         .promise()
-        .then(x => expect(x).toEqual('Some data (from moon)'))
-        .catch(() => expect(true).toBe(false)); // will get this assertion if the assertion in the 'then' fails
+        .then(x => expect(x).toEqual('Some data (from moon)'));
+    });
+
+    it("handle success and process the results using 'chain'", () => {
+      const toUppercase = s => s.toUpperCase();
+      const task = getDataTask('moon').run();
+      jest.runAllTimers();
+
+      return task
+        .promise()
+        .then(toUppercase)
+        .then(r => expect(r).toEqual('SOME DATA (FROM MOON)'));
     });
   });
 });
