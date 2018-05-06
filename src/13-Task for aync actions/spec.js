@@ -27,7 +27,10 @@ describe('13 - use Task for asynchronous actions', () => {
       const task = getDataTask('moon').run();
       jest.runAllTimers();
 
-      task.promise().then(x => expect(x).toBe('abba'));
+      task
+        .promise()
+        .then(x => expect(x).toEqual('Some data (from moon)'))
+        .catch(() => expect(true).toBe(false)); // will get this assertion if the assertion in the 'then' fails
     });
   });
 });

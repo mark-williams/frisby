@@ -16,7 +16,6 @@ const getData = (path, cb) => {
 const getDataTask = path =>
   task(resolver => {
     getData(path, (err, data) => {
-      console.log('GETDATA', err, data);
       if (err) {
         resolver.reject(err);
       } else {
