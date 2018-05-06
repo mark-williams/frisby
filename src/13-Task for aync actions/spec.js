@@ -42,5 +42,30 @@ describe('13 - use Task for asynchronous actions', () => {
         .then(toUppercase)
         .then(r => expect(r).toEqual('SOME DATA (FROM MOON)'));
     });
+
+    describe("handle task errors with 'listen'", () => {
+      it("given a valid call should call listen's onResolved", () => {
+        const task = getDataTask('moon').run();
+        expect.assertions(1);
+        jest.runAllTimers();
+
+        task.listen({
+          onResolved: d => expect(d).toEqual('Some data (from moon)'),
+          onRejected: () => expect(true).toBe(false)
+        });
+      });
+
+      it("given an invalid call should call listen's onRejected", () => {
+        const task = getDataTask(null).run();
+        expect.assertions(1);
+        jest.runAllTimers();
+
+        task.listen({
+          onResolved: () => () => expect(true).toBe(false),
+          onRejected: err =>
+            expect(err).toBe('Where am I meant to get the data from?')
+        });
+      });
+    });
   });
 });
