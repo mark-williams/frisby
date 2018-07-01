@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jest ./src --watch",
+    "test:debug": "node --inspect-brk ./node_modules/.bin/jest --runInBand --watch",
     "lint": "eslint ./src"
   },
   "keywords": [
